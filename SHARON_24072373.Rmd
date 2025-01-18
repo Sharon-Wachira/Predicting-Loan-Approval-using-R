@@ -1,0 +1,1378 @@
+---
+title: "SHARON_24072373"
+author: "SHARON WACHIRA"
+date: "2024-12-16"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, include=FALSE, message=FALSE, warning=FALSE)
+```
+
+## Introduction
+
+Housing Finance plays a significant role in housing delivery. One of the most expensive assets that most families own over their lifetime is a house and its purchase needs external financial aid (Doling et al. (2013). The primary source for the financial aid for Housing is banks and mortgages (Kavaarpuo, Mintah and Donkor-Hyiaman (2023). Globally, the housing finance market size was valued at around 4500 billion in the year 2021 and is expected to grow seven times more by the year 2031. (Allied Market Research, 2022). 
+
+
+The rising need for money to purchase housing among individuals and businesses has boosted the growth of the housing finance market. Due to the demand of the loans, Dream Housing Finance Company, a player in the home loan sector and attending to urban, semi-urban and rural regions, seeks to automate the loan eligibility process to promote efficiency.
+
+
+Through my project, I utilized machine learning models such as Random Forest and XGBoost methods to predict loan eligibility based on the customer data. This will provide a quick and simple approach to pick deserving loan applicants. It will save time for the banks’ employees and enhance operational efficiency within the Housing Finance Company. (Marc Escapa, 2023).
+
+### 1.1	Problem Description
+
+Dream Housing Finance Company provides home loans. Their process involves customer applications for house loans, followed by the company validating eligibility manually. This traditional process involves significant paperwork, leading to delays and frustration among potential clients. Other challenges may include time wastage when loan officers do an analysis to check a customer’s creditworthiness. With the extensive paperwork involved, various departments manage the verification process which increases data entry errors. (MonJa: Intelligent Document Automation for Lenders, 2023b).
+
+
+ These delays lead to late approvals  and increase inaccuracies. The company aims address these challenges by automating the eligibility process. Banks benefit more from loans and need an easier process to determine who is genuine and who will return the loan (Yamparala et al., 2022). When looking for genuine clients, the volume of loan applicants keeps growing rapidly, with an average increase of 1.5% per year between 2015 and 2022 (Cheriyan et al., 2024). This creates a cumbersome workload for banks, often accompanied by higher costs and increased operational risks.
+ 
+ 
+Before banking automation, banks used to be so crowded, and employees in the branches were always busy handling the day-to-day affairs of the banks. Even branch managers could not get enough time with their big clients (Najafbagy et al., 2010). 
+
+
+In today’s world, it is important for banks to have a culture shift and adopt technology to optimize the existing processes and ensure efficiency (Wingard, 2024). In 2021, one of the largest banks increased its technology budget by more than 10% and moved 70% of its applicants to cloud and made plans to increase the number by 30% yearly and this was projected to save the bank about 2 billion dollars in the long run and shift the balance of its operations from 60% on maintaining systems to almost 50% being spent on innovations .(Baig, Sohoni and Lhuer (2024). 
+
+
+By automating systems, live updates and tracking capabilities allow various stakeholders like underwriters and managers to monitor the applications and identify outstanding tasks. This ensures timely progress and helps users in prioritizing their responsibilities effectively (Vanner, 2024). By approving loans automatically, the loan providers can approve more loans, which will lead to increased revenue within the banks (Vanner, 2024).
+
+
+Automating the loan approval system will streamline operations, reduce costs, and enhance the customer experience in Dream Housing Finance Company.
+
+
+### 1.2	Objectives
+
+
+The PRIMARY objective of this study is to develop a predictive model for loan approval that forms a critical component of enabling the loan eligibility automation process.
+
+
+To achieve this, I will also evaluate and compare the performance of the machine learning models to identify the most reliable approaches for predicting loan eligibility. 
+
+
+My last objective is to lay the groundwork for the automation of the loan eligibility process by creating a reliable prediction system that will be perfectly integrated with real-time application.
+
+### 1.3. 1.3	Data Overview 
+
+The Dream House financing company datasets were obtained from Kaggle. The purpose of these datasets is to assess and predict loan eligibility based on the customer information such as their credit history, financial status, marital status, employment status and more. By doing the analysis, the datasets aim to find patterns and criteria impacting loan approval. This will streamline and enhance decision making for the House Financing company. 
+
+Two datasets were provided, one is the training dataset and the other is a testing dataset. The training dataset contains 614 entries and 13 columns, and the test datasets has 367 entries and 12 columns. (with exception of the target variable). 
+
+
+The columns in the datasets are as follows:
+```{r include=TRUE, echo=FALSE}
+
+# Create a data frame for the key names and descriptions
+data_dictionary <- data.frame(
+  Key_Name = c(
+    "Loan_ID", "Gender", "Married", "Dependents", "Education", 
+    "Self_Employed", "ApplicantIncome", "CoapplicantIncome", "LoanAmount", 
+    "Loan_Amount_Term", "Credit_History", "Property_Area", "Loan_Status"
+  ),
+  Description = c(
+    "Unique Loan ID of applicant", "Male/Female", "Marital Status (Y/N)", 
+    "Number of Dependents", "Graduate / Undergraduate", 
+    "Is applicant self-employed (Y/N)", "Applicant Income", 
+    "Coapplicant’s Income", "Amount of loan in Thousands", 
+    "Term of the loan in Months", "Prior credit guidelines met", 
+    "Urban / Semi-Urban / Rural", "Loan Approval (Y/N)"
+  )
+)
+
+# Display the table using knitr::kable
+knitr::kable(
+  data_dictionary,
+  caption = "Data Dictionary: Key Names and Descriptions",
+  col.names = c("Key Name", "Description"),
+  align = "l" # Align all columns to the left
+)
+```
+
+
+## 2	LITERATURE REVIEW 
+
+
+#### Loan Eligibility and Approval Process in Traditional Banking
+
+For the longest time, the loan approval process was being verified manually and included a lot of paperwork and human intervention. Banks heavily relied on face-to-face interaction with the applicants and this led to a lot of delays (Najafbagy et al. (2010). Despite offering an applicant an opportunity to have a discussion with the bank about any challenges or questions they may have about the loans, it would waste so much time for both the lender and the client. (MonJa: Intelligent Document Automation for Lenders, 2023c) . 
+
+
+Yearly, the volumes of loan applications continue to grow making it hard for manual handling of application cumbersome and in the long-run, unsustainable. Cheriyan et al. (2024). This meant that a more efficient approach was desperately needed to meet the growing demand for loans in banks. (Yamparala, R., et al. (2022). 
+
+
+#### Automating Loan Eligibility
+
+
+By automating bank services, efficiency, and reduction in cost of labour and errors is enabled Vanner (2024). By use of online application systems to gather customer data, banks can easily decide if the applicant qualifies  for a loan. Streamlining benefits both banks and customers which makes the whole process smoother and faster. In the recent years, banks are now using cloud-based technologies to optimize their systems. Wingard (2024). The transition to digital platforms automatically streamlines day-to-day procedures enhancing loan application. 
+
+Banks are anticipating the millions of dollars that they will save just from the digital automation and the better resource management (Baig, Sohoni, and Lhuer, 2024). Furthermore, this automation will improve customer experience by providing faster loan processing periods (Marc Escapa, 2023). The speed is crucial for customer satisfaction where it matters to clients in competitive markets. 
+
+
+#### Performance of Machine Learning in Loan Eligibility
+
+
+Machine learning has gained attention worldwide with its capacity to improve loan eligibility . it creates models that can be trained to give output of accurate predictions and how the models will respond to new data using the known data that it was trained with Gogula and Chattu (2024). Models such as XGBoost are more effective when it comes to data that involves binary outcomes and it has an ability to handle both large and small datasets Wang(2024). 
+Random Forest is a power model because of its capacity to manage complex data using multiple decision trees Ellis (2023). Both models can predict loan eligibility and providing resourceful insights. In this study, machine learning is useful as it will aid in the process of validating a customer,  knowing who has the least chances of defaulting and a dependable one. 
+
+
+In conclusion, transitioning from traditional manual ways to automated marks a significant growth in the banking industry in matters related to efficiency and effectiveness. Continuous integration of technologies and new systems will ensure sustainable and customer-friendly loan eligibility process. 
+
+## 3	METHODOLOGY 
+
+### 3.1	Data Collection
+
+
+The datasets in this study were obtained from Kaggle. The training dataset (loan_train.csv) has historical loan application data and the testing data (loan_test.csv) used to predict the model’s predictions. Both datasets were loaded into R as showin figure 1 using the (“read.csv.) function and all libraries needed for the data preparation loaded. 
+
+---
+title: "Loan Data Analysis"
+output: word_document
+---
+
+```{r, echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(ggcorrplot)
+library(corrplot)
+library(GGally)
+library(reshape2)
+library(gridExtra)
+library(rlang)
+library(ggExtra)
+```
+
+```{r include=TRUE, echo=FALSE}
+DataTrain <- read.csv("C:/Users/loan_train.csv")
+DataTest <- read.csv("C:/Users/loan_test.csv")
+```
+
+
+### 3.2	Data Exploration
+Structure and Summary of the Datasets
+The first step in data exploration is understanding the dimensions of our datasets. The visualizations represent the various columns in our datasets and help understand the distribution of the data. 
+
+
+The code ‘str ()’ function provides a human readable summary of our datasets. Particularly, it is useful in understanding the types of data in the data frames. Through the ‘str ()’ function, there are both categorical and numerical variables in our datasets. There are missing values that will need to be addressed in data preprocessing. The datasets provide a comprehensive overview of the loan applicants which can be used for further analysis to make predictions of loan approval. 
+
+```{r}
+get_mode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+
+```{r include=TRUE, echo=FALSE}
+### Checking Data Dimensions
+print(str(DataTrain))
+print(str(DataTest))
+print(dim(DataTrain))
+print(dim(DataTest))
+```
+
+
+The DataTrain has 614 observations and 13 variables. This observation shows that there are missing values in LoanAmount, Loan_Amount_Term, and Credit_History. The Income and Loan Amount distributions suggest a wide range of financial backgrounds among the Applicants, which could influence loan approval decisions. 
+
+
+In the Data Test, there are 367 observations and 12 variables. There are also missing values that will need attention and handling in the data preprocessing. 
+
+
+### Feature exploration
+
+Understanding the characteristics of the categorical and handling the noncategorical features is crucial for effective prediction and use of models. Through R, I developed a function to show the variables within both datasets. The understanding of the data is also important to make informed decisions during data preprocessing, exploratory data analysis and model development in the later stages of analysis. 
+
+
+The function developed uses the ‘explore_object_type’ to show the number of times a unique value or text appears in each column. Figures shows the variables in DataTrain and figures shows the variables in the DataTest. 
+
+```{r include=TRUE, echo=FALSE}
+explore_object_type <- function(df, feature_name) {
+  if (is.factor(df[[feature_name]]) || is.character(df[[feature_name]])) {
+    print(table(df[[feature_name]], useNA = "ifany"))
+  } else {
+    cat(feature_name, "is not a factor or character column.\n")
+  }
+}
+
+# For DataTrain
+DataTrain_columns <- colnames(DataTrain)[!colnames(DataTrain) %in% "Loan_ID"]
+for (featureName in DataTrain_columns) {
+  if (is.factor(DataTrain[[featureName]]) || is.character(DataTrain[[featureName]])) {
+    cat('\n"', featureName, "'s Values with count are:\n", sep = "")
+    explore_object_type(DataTrain, featureName)
+  }
+}
+
+# For DataTest
+DataTest_columns <- colnames(DataTest)[!colnames(DataTest) %in% "Loan_ID"]
+for (featureName in DataTest_columns) {
+  if (is.factor(DataTest[[featureName]]) || is.character(DataTest[[featureName]])) {
+    cat('\n"', featureName, "'s Values with count are:\n", sep = "")
+    explore_object_type(DataTest, featureName)
+  }
+}
+```
+
+## 3.3	Data Preprocessing
+
+### 3.3.1	Dropping the Loan_ID Column 
+
+The Loan_ID column is a unique identifier that is assigned to every individual who applies for a loan. It holds no meaningful relation with our target variable or any other independent variable. 
+
+Since our models rely on patterns, this column would not contribute to improve the predictions. This is a standard practice as it has no contextual significance for understanding our problem. 
+
+By setting the Loan_ID column to NULL, it was effectively removed from the datasets ensuring only relevant columns in the datasets remained. To verify if the columns were successfully removed, I checked the column names of the datasets. Here are the results that confirm that the Loan_ID was removed successfully from both datasets. 
+
+```{r include=TRUE, echo=FALSE}
+DataTrain$Loan_ID <- NULL
+DataTest$Loan_ID <- NULL
+
+# Check the column names after dropping Loan_ID
+colnames(DataTrain)
+colnames(DataTest)
+
+```
+
+### 3.3.2	Handling Missing Values 
+
+
+It is essential to identify and handle any missing values in the datasets. Most of missing data is attributed to human error of omission of some answers by respondents or machine error. They can impact the results of your analysis. They reduce the amount of usable data, and this compromises the insights that could be retrieved from the data. 
+
+```{r include=TRUE, echo=FALSE}
+##### MISSING VALUES 
+
+
+# Check for missing values in DataTrain and DataTest
+missing_counts_train <- colSums(is.na(DataTrain))
+print("Missing values in DataTrain before handling:")
+print(missing_counts_train)
+
+missing_counts_test <- colSums(is.na(DataTest))
+print("Missing values in DataTest before handling:")
+print(missing_counts_test)
+```
+
+
+To handle the missing values in LoanAmount, it is important to visualize both datasets and see the distribution of the data. Through this, it is easy to identify which method would be used to handle the missing value.
+
+
+In the analysis of the datasets, I created dataframe that summarizes both missing and non-missing values then reshaped them for plotting purposes. The histograms were then generated to show the data distribution in both DataTrain and DataTest. 
+
+
+```{r}
+
+# Create a data frame for plotting missing values in DataTrain
+missing_data <- data.frame(
+  Feature = names(missing_counts_train),
+  MissingCount = missing_counts_train
+)
+
+# Add a column for non-missing counts
+missing_data$NonMissingCount <- nrow(DataTrain) - missing_data$MissingCount
+
+# Reshape the data for plotting
+missing_data_long <- tidyr::pivot_longer(missing_data, 
+                                         cols = c("MissingCount", "NonMissingCount"), 
+                                         names_to = "Type", 
+                                         values_to = "Count")
+```
+
+```{r include=TRUE, echo=FALSE}
+
+# Visualizing LoanAmount distribution in DataTrain before handling missing values
+ggplot(DataTrain, aes(x = LoanAmount)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = 'blue', alpha = 0.5) +
+  geom_density(color = 'red', linewidth = 1) +  # Changed size to linewidth
+  labs(title = "Distribution of LoanAmount in DataTrain Before Imputation", x = "LoanAmount", y = "Density") +
+  theme_minimal()
+```
+
+
+```{r}
+
+# Create a data frame for plotting missing values in DataTest
+missing_data <- data.frame(
+  Feature = names(missing_counts_train),
+  MissingCount = missing_counts_train
+)
+
+# Add a column for non-missing counts
+missing_data$NonMissingCount <- nrow(DataTest) - missing_data$MissingCount
+
+# Reshape the data for plotting
+missing_data_long <- tidyr::pivot_longer(missing_data, 
+                                         cols = c("MissingCount", "NonMissingCount"), 
+                                         names_to = "Type", 
+                                         values_to = "Count")
+```
+
+```{r include=TRUE, echo=FALSE}
+# Visualizing LoanAmount distribution in DataTest before handling missing values
+ggplot(DataTest, aes(x = LoanAmount)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = 'blue', alpha = 0.5) +
+  geom_density(color = 'red', linewidth = 1) +  # Changed size to linewidth
+  labs(title = "Distribution of LoanAmount in DataTest Before Imputation", x = "LoanAmount", y = "Density") +
+  theme_minimal()
+```
+
+
+Both histograms show a right-skewed distribution. This means that there are extreme values in leaning towards the lower end. When data is rightly skewed, it means that the mean is greater than the median because of outlier presence. Choosing mean would therefore be ideal to maintain consistency within the distribution while also reflecting the average loan size. Choosing mean will also reflect the overall magnitude of Loan_Amount. 
+
+
+The ‘handle_missing_values’ function is now created to handle the missing values in both of my datasets. It allowed both the use of mode and mean for the columns needing replacement of values. This approach will ensure integrity and ensure effective analysis despite having missing data. 
+
+
+For Credit_History and Loan_Amount_Term, the need for visualization was important to understand the patterns and implications of the incomplete data. Visualization will quickly show the frequency distribution and identify the underrepresented values in the datasets.  The comparisons are vital to predict the loan status effectively. 
+
+```{r include=TRUE, echo=FALSE}
+# Create the plots for DataTrain
+plot1_train <- ggplot(DataTrain, aes(x = Loan_Amount_Term)) +
+  geom_bar(fill = 'blue', alpha = 0.7) +
+  labs(title = "Loan_Amount_Term Before (DataTrain)", 
+       x = "Loan Amount Term", y = "Count") +
+  theme_minimal()
+
+plot2_train <- ggplot(DataTrain, aes(x = Credit_History)) +
+  geom_bar(fill = 'green', alpha = 0.7) +
+  labs(title = "Credit_History Before (DataTrain)", 
+       x = "Credit History", y = "Count") +
+  theme_minimal()
+
+# Create the plots for DataTest
+plot1_test <- ggplot(DataTest, aes(x = Loan_Amount_Term)) +
+  geom_bar(fill = 'blue', alpha = 0.7) +
+  labs(title = "Loan_Amount_Term Before (DataTest)", 
+       x = "Loan Amount Term", y = "Count") +
+  theme_minimal()
+
+plot2_test <- ggplot(DataTest, aes(x = Credit_History)) +
+  geom_bar(fill = 'green', alpha = 0.7) +
+  labs(title = "Credit_History Before (DataTest)", 
+       x = "Credit History", y = "Count") +
+  theme_minimal()
+
+# Arrange the plots in a grid layout
+grid.arrange(plot1_train, plot2_train, plot1_test, plot2_test, ncol = 2)
+```
+
+
+The graphs indicate both the visuals of DataTrain and DataTest. To address the missing value, I will use the mode strategy. It is a logical choice because for discrete variables like Credit_History and LoanAmount loan has one variable with the most count. 
+
+By using mode, I will preserve the integrity of my data which is the overall structure of the data. It is also necessary to use the same method for both the training and test data to prevent any discrepancies. 
+
+
+To calculate mode and median, I used codes to calculate the mode of a vector and compute the mean of the 2 datasets. This analysis is also important to identify the central tendency of the ‘LoanAmount’. 
+
+
+The mean of the LoanAmount in both DataTrain is 146.4 and 136.13 for the DataTest.
+
+
+```{r}
+# Function to handle missing values by filling with mode or mean
+handle_missing_values <- function(df, column, method) {
+  if (method == "mode") {
+    mode_value <- names(sort(table(df[[column]]), decreasing = TRUE))[1]
+    df[[column]][is.na(df[[column]])] <- mode_value
+  } else if (method == "mean") {
+    mean_value <- mean(df[[column]], na.rm = TRUE)
+    df[[column]][is.na(df[[column]])] <- mean_value
+  }
+  return(df)
+}
+```
+
+```{r}
+# Function to calculate the mode
+get_mode <- function(v) {
+  uniq_v <- unique(v)
+  uniq_v[which.max(tabulate(match(v, uniq_v)))]
+}
+
+# Calculate the mean for LoanAmount in DataTrain and DataTest
+mean_loanamount_train <- mean(DataTrain$LoanAmount, na.rm = TRUE)
+mean_loanamount_test <- mean(DataTest$LoanAmount, na.rm = TRUE)
+
+# Print the means
+print(paste("Mean LoanAmount in DataTrain:", mean_loanamount_train))
+print(paste("Mean LoanAmount in DataTest:", mean_loanamount_test))
+
+# Replace missing values in specified columns for both datasets
+columns_to_impute <- c('Credit_History', 'LoanAmount', 'Loan_Amount_Term')
+
+for (column in columns_to_impute) {
+  if (column == 'Credit_History') {
+    DataTrain <- handle_missing_values(DataTrain, column, "mode")
+    DataTest <- handle_missing_values(DataTest, column, "mode")
+  } else if (column == 'LoanAmount') {
+    DataTrain <- handle_missing_values(DataTrain, column, "mean")
+    DataTest <- handle_missing_values(DataTest, column, "mean")
+  } else if (column == 'Loan_Amount_Term') {
+    mode_train <- get_mode(DataTrain[[column]])
+    mode_test <- get_mode(DataTest[[column]])
+    DataTrain[[column]][is.na(DataTrain[[column]])] <- mode_train
+    DataTest[[column]][is.na(DataTest[[column]])] <- mode_test
+  }
+}
+```
+
+After filling in the missing values, a validation is done across both datasets to ensure the data is now complete. It confirms that the data is ready for use and the data is now reliable for the next phases. Figure 15 and 16 confirms that no missing values are left. 
+
+
+```{r include=TRUE, echo=FALSE}
+# Check for missing values after handling in DataTrain and DataTest
+missing_counts_train_after <- colSums(is.na(DataTrain))
+print("Missing values in DataTrain after handling:")
+print(missing_counts_train_after)
+
+missing_counts_test_after <- colSums(is.na(DataTest))
+print("Missing values in DataTest after handling:")
+print(missing_counts_test_after)
+
+```
+
+
+After filling in missing values, it is important to create the visualizations again to see if the missing value changes the trend of the datasets. Introducing mean will cause some changes in the concentration of the values around the mean in the dataset and this will slightly change the distribution. If there are unusual spikes aft imputing the missing values, it means that bias has been introduced and this would affect the models. 
+
+
+```{r include=TRUE, echo=FALSE}
+# Visualizing LoanAmount distribution in DataTrain after replacing missing values with mean
+ggplot(DataTrain, aes(x = LoanAmount)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = 'blue', alpha = 0.5) +
+  geom_density(color = 'red', linewidth = 1) +
+  labs(title = "Distribution of LoanAmount in DataTrain After Mean Imputation", 
+       x = "LoanAmount", y = "Density") +
+  theme_minimal()
+
+```
+
+For the LoanAmount in both datasets, the distribution of the LoanAmount demonstrates that the overall shape of the histograms remained consistent with the pre-imputation analysis. While the length of the bars in the concentrated areas changed slightly, this is an expected since the missing values that were filled with a value close to the central tendency. 
+
+
+Use of mean was therefore the most suitable as it allowed seamless handling of missing values and maintained the pattern of the datasets. This ensures its suitability for any statistical and modelling analysis. 
+
+
+Verification for the Loan_Amount_Term and Credit_History is also vital. I used bar plots to assess the impact of the imputation process. Through verifying, there will be a clear intuitive representation of the data. Visualizing the columns also provides insight into whether the changes introduced in the columns caused any distortion or biasness in the data.
+
+
+The visualizations  reveal that the overall patterns remained constant in both datasets. For the Loan_Amount_Term, most values had a common term which was 360 months, and this is what we used to fill the missing values. Credit_History retained its distribution with majority of entries being1, which means that most loan applicants have a credit history. This shows that the mode replacement was successful. 
+
+```{r include=TRUE, echo=FALSE}
+# Visualizing LoanAmount distribution in DataTest after replacing missing values with mean
+ggplot(DataTest, aes(x = LoanAmount)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30, fill = 'blue', alpha = 0.5) +
+  geom_density(color = 'red', linewidth = 1) +
+  labs(title = "Distribution of LoanAmount in DataTest After Mean Imputation", 
+       x = "LoanAmount", y = "Density") +
+  theme_minimal()
+ 
+```
+
+```{r include=TRUE, echo=FALSE}
+# Create the plots for DataTrain
+plot1_train <- ggplot(DataTrain, aes(x = Loan_Amount_Term)) +
+  geom_bar(fill = 'blue', alpha = 0.7) +
+  labs(title = "Loan_Amount_Term After (DataTrain)", 
+       x = "Loan Amount Term", y = "Count") +
+  theme_minimal()
+
+plot2_train <- ggplot(DataTrain, aes(x = Credit_History)) +
+  geom_bar(fill = 'green', alpha = 0.7) +
+  labs(title = "Credit_History After (DataTrain)", 
+       x = "Credit History", y = "Count") +
+  theme_minimal()
+
+# Create the plots for DataTest
+plot1_test <- ggplot(DataTest, aes(x = Loan_Amount_Term)) +
+  geom_bar(fill = 'blue', alpha = 0.7) +
+  labs(title = "Loan_Amount_Term After (DataTest)", 
+       x = "Loan Amount Term", y = "Count") +
+  theme_minimal()
+
+plot2_test <- ggplot(DataTest, aes(x = Credit_History)) +
+  geom_bar(fill = 'green', alpha = 0.7) +
+  labs(title = "Credit_History After (DataTest)", 
+       x = "Credit History", y = "Count") +
+  theme_minimal()
+
+# Arrange the plots in a grid layout
+grid.arrange(plot1_train, plot2_train, plot1_test, plot2_test, ncol = 2)
+```
+
+### 3.3.3	Feature Engineering 
+
+‘Dependents’ column in both datasets has unique columns like 0, 1, 2 and 3+ as shown in figure 20 and 21. To do predictions easily, numerical values will work better hence the need to change 3+ to 3. 
+
+```{r include=TRUE, echo=FALSE}
+
+#HANDLING DEPENDENT ISSUE 
+
+# Check unique values in the Dependents column for DataTrain
+unique_dependents_train <- unique(DataTrain$Dependents)
+print("Unique values in Dependents (DataTrain):")
+print(unique_dependents_train)
+
+
+
+# Check unique values in the Dependents column for DataTest
+unique_dependents_test <- unique(DataTest$Dependents)
+print("Unique values in Dependents (DataTest):")
+print(unique_dependents_test)
+```
+
+The change from 3+ to 3 maintains the nature of the value showing that higher value has greater significance. This step was important in preparing the data to ensure the insights derived are interpretable and accurate. After replacing the values in the ‘Dependents’ column, it is essential to check the unique values to ensure that the training and testing data have been modified correctly.
+
+```{r include=TRUE, echo=FALSE}
+# Ensure Dependents column is character type
+DataTrain$Dependents <- as.character(DataTrain$Dependents)
+DataTest$Dependents <- as.character(DataTest$Dependents)
+
+# Replace any value not in 0, 1, or 2 with 3
+DataTrain$Dependents[!(DataTrain$Dependents %in% c("0", "1", "2"))] <- "3"
+DataTest$Dependents[!(DataTest$Dependents %in% c("0", "1", "2"))] <- "3"
+```
+All values have been correctly consolidated into category “3”. The data are now in a consistent which is essential for accurate analysis. 
+
+```{r include=TRUE, echo=FALSE}
+# Check unique values after replacement
+unique(DataTrain$Dependents)
+unique(DataTest$Dependents)
+
+```
+
+## 3.4	Exploratory Data Analysis
+
+This is a crucial step in any data analysis process. It involves visualization of key characteristics of the dataset to get a good understanding of the structure of the data. Through EDA, insights are derived that guide in selecting the appropriate modelling techniques.
+
+
+The testing dataset, DataTest, even without performing its EDA, has undergone the same preprocessing steps as the training Dataset, DataTrain to ensure consistency. 
+
+#### Applicant Income vs Loan Amount
+
+To analyse the relationship between Applicant Income and loan amount, a scatter plot was generated as shown below. It shows the relationship between applicant income and loan amount allowing an analysis of how these 2 variables correlate. A sizeable number of applicants have an income of between 0 to 20,000 and their loan application range between 0 to 400,000 which shows that many loan applicant fall within the lower income bracket. Very few individuals representing higher income earners have larger loan amounts which shows that there might be relationship between the amount of loan applied and the income of the applicant.
+
+```{r include=TRUE, echo=FALSE}
+#Scatter plot 
+ggplot(DataTrain, aes(x = ApplicantIncome, y = LoanAmount)) +
+  geom_point(color = "black", shape = 4, size = 3) + 
+  labs(title = "Correlation Between Applicant Income vs Loan Amount",
+       x = "Applicant Income",
+       y = "Loan Amount") +
+  theme_minimal() +  # Use a minimal theme
+  theme(panel.grid.major = element_line(color = "grey", linetype = "dotted"),  
+        panel.grid.minor = element_blank())  
+
+
+```
+
+
+
+#### Credit history vs Loan Status 
+
+Credit history is a record of your past debt. It shows how you have managed the repayments of your loans or even credit cards in the past. To understand how applicants with a credit history related with their loan status, a bar plot is created. The cast majority with a credit history received a loan as shown by the bar reaching almost 75% of the total applicants. About 10% of loan applicants got a loan approval without having a credit history. The graph indicates that having a credit history increases your chances of getting loan approval.
+
+```{r include=TRUE, echo=FALSE}
+#### Bar plot for Credit History and Loan Status
+
+ggplot(DataTrain, aes(x = factor(Credit_History), fill = factor(Loan_Status))) + 
+  geom_bar(position = "fill") + 
+  ggtitle("Impact of Credit History on Loan Status")
+```
+
+#### Coapplicant Income vs Loan Amount
+
+
+A co-applicant is somebody who participates in the loan underwriting and goes through the loan process with the main applicant. In home loan, most of the co-applicants are the partners(couple) or in some cases, a parent, daughter, or son. Understanding the relationship between a co-applicant and loan amount helps assess the risks associated with lending. Other than risks, it may show if loans are sought by households with dual or single people households. 
+The scatter plot visualizes the relationship between Co-applicant income and loan amount. A significant cluster of data point s are along the x-axis indicating several applicants applied for loans even without a co-applicant.
+
+They even applied for massive amounts of 400,000+ indicating that a co-applicant is not a mandatory requirement to apply for a home loan. There is no strong correlation visible between a co-applicant and the amount of loan meaning that other variables might be more influential in a loan approval decision. 
+
+
+```{r include=TRUE, echo=FALSE}
+# Scatter plot for CoapplicantIncome vs LoanAmount 
+ggplot(DataTrain, aes(x = CoapplicantIncome, y = LoanAmount)) + 
+  geom_point(color = "brown") + 
+  ggtitle("Coapplicant Income vs Loan Amount")
+```
+
+#### Education level vs loan status 
+
+The bar plot in figure is done to visualize the relation between education and loan application is done. This helps understand the applicants’ profiles, understand if education influences an applicant’s financial behaviour and assess how education impacts access to financial services. 
+
+
+```{r include=TRUE, echo=FALSE}
+
+# Create a bar plot
+ggplot(DataTrain, aes(x = Education, fill = Loan_Status)) +
+  geom_bar(position = "fill") +  
+  labs(title = "Loan Status by Education Level",
+       x = "Education Level",
+       y = "Proportion",
+       fill = "Loan Status") +
+  theme_minimal()
+
+```
+#### Property Area vs Loan Status 
+
+The stacked bar plot shows that the proportion of graduates who received a loan approval was about 70%. This could be an implication that an applicant at graduate level has higher chances of securing a loan since they may have a stable job and higher earning potential which makes them more attractive to lenders. 
+
+
+On the other side, 60% of non- graduates got loan approvals which means that non-graduates also have a reasonable chance of getting loan approvals. Further analysis will better understand the decision-making criteria.  
+
+
+In our data, we have a column showing property area. The entries are urban, semi-urban and rural areas. Understanding loan status on different geographical segments may indicate where applicants with financial stability are majorly located, financial literacy in different regions and where the finance housing loans are mostly considered
+
+```{r include=TRUE, echo=FALSE}
+# Create a stacked bar plot showing percentages
+ggplot(DataTrain, aes(x = Property_Area, fill = Loan_Status)) +
+  geom_bar(position = "fill") +  
+  labs(title = "Loan Status Proportion by Property Area",
+       x = "Property Area",
+       y = "Proportion",
+       fill = "Loan Status") +
+  scale_y_continuous(labels = scales::percent) + 
+  theme_minimal()
+```
+
+Key observation made show that approximately 75% of semiurban applicants got a loan approval indicating favourable conditions for loan approval. This may indicate stable incomes, moderate property values and reliable credit histories as well. Urban applicants rage between 63-67% which could also be attributed to financial stability and economic activities available in urban settings.
+
+Being lower than semiurban would be influenced by higher loan requests, higher cost of living and stricter credit checks. Lastly, the rural areas had the lowest loan approval of around 58%. Factors that contribute to this would be lack of financial literacy thus affecting their loan eligibility. 
+
+##3.5	Outliers
+
+During the summary statistics and the EDA process, it was clear that there was skewed distribution of data. For example, our applicant income has a minimum value of 150 and maximum of 81,000 yet the median was 3,812  and the 75th percentile was 5,795. The minimum and maximum values were significantly higher than the interquartile range. 
+
+Similarly, the co-applicant income was ranging between 0 and 41,667 yet the median displayed as 1,188. This suggested data issues or zero meant that there were no co-applicants reported by the loan applicants.
+
+Lastly, the loan amount also ranged between 9 and 700 yet the median was 128 and the 75th percentile was 168, this shows a big gap between 75th and maximum value indicating  more outliers within the higher range. 
+
+ 
+```{r}
+
+## 4. CHECK OUTLIERS 
+
+# Identify numeric columns in DataTrain and DataTest
+numeric_columns_train <- sapply(DataTrain, is.numeric)
+numeric_columns_test <- sapply(DataTest, is.numeric)
+```
+
+```{r include=TRUE, echo=FALSE}
+# Print the numeric columns
+cat("Numeric columns in DataTrain:\n")
+print(names(DataTrain)[numeric_columns_train])
+
+cat("\nNumeric columns in DataTest:\n")
+print(names(DataTest)[numeric_columns_test])
+```
+
+
+```{r include=TRUE, echo=FALSE}
+par(mfrow = c(2, 2))
+
+# Histogram for ApplicantIncome in DataTrain
+hist(DataTrain$ApplicantIncome,
+     main = "Histogram-ApplicantIncome-(DataTrain)",
+     xlab = "ApplicantIncome",
+     ylab = "Frequency",
+     col = "lightblue",
+     border = "black",
+     breaks = 30)  
+
+# Histogram for CoapplicantIncome in DataTrain
+hist(DataTrain$CoapplicantIncome,
+     main = "Histogram-CoapplicantIncome(DataTrain)",
+     xlab = "CoapplicantIncome",
+     ylab = "Frequency",
+     col = "lightgreen",
+     border = "black",
+     breaks = 30)  
+
+# Histogram for LoanAmount in DataTrain
+hist(DataTrain$LoanAmount,
+     main = "Histogram-LoanAmount (DataTrain)",
+     xlab = "LoanAmount",
+     ylab = "Frequency",
+     col = "lightpink",
+     border = "black",
+     breaks = 30)  
+
+par(mfrow = c(1, 1))  
+
+```
+
+
+I examined outliers using Histograms to visualize the outliers. Despite not having a clear guidance in how to deal with outliers properly as they are considered ‘problematic data, detecting them is important for better data understanding and identify if any extreme values show errors or anomalies. They show variability in data and sometimes do need further investigations.
+
+
+In the histograms, the ApplicantIncome and Coapplicant show that most applicant incomes are at the lower levels. This means that low-income earners apply for housing finance more than the high-income earners. With the pressure of the rapid population worldwide that is estimated to be almost 9 billion by 2030, many urban poor may not afford housing without proper housing finance solutions, hence the need for affordable housing finance market (World Bank Group, 2023).
+
+
+ The outliers detect the high-paying jobs or entrepreneurs who also seek housing finance, and they are the minority. The LoanAmount Outliers are between 0 to 300,000. Considering the income of most applicants is low, it is logically sensible as to why the loan amount would be low as well. 
+Outliers in the DataTest are also checked using histograms in the same way and the histograms below shows that they have the same trend as the DataTrain. 
+
+
+```{r include=TRUE, echo=FALSE}
+par(mfrow = c(2, 2))
+
+# Histogram for ApplicantIncome in DataTest
+hist(DataTest$ApplicantIncome,
+     main = "Histogram-ApplicantIncome-(DataTest)",
+     xlab = "ApplicantIncome",
+     ylab = "Frequency",
+     col = "lightblue",
+     border = "black",
+     breaks = 30)  
+
+# Histogram for CoapplicantIncome in DataTest
+hist(DataTest$CoapplicantIncome,
+     main = "Histogram-CoapplicantIncome(DataTest)",
+     xlab = "CoapplicantIncome",
+     ylab = "Frequency",
+     col = "lightgreen",
+     border = "black",
+     breaks = 30)  
+
+# Histogram for LoanAmount in DataTest
+hist(DataTest$LoanAmount,
+     main = "Histogram-LoanAmount (DataTest)",
+     xlab = "LoanAmount",
+     ylab = "Frequency",
+     col = "lightpink",
+     border = "black",
+     breaks = 30)  
+
+par(mfrow = c(1, 1))
+
+```
+
+The decision to keep the outliers was influenced by the following reasons:
+
+•	In my Data, the outliers represent real, valid data. For example, in a case where a Loan Applicant has high income, it shows unique cases of high-income earners who still choose to use Housing Finance and high loan amounts reflect the needs of the loan applicants. 
+
+•	Removing outliers might lead to the loss of valuable information of whether high loan amount earners get loan approvals or not. Does having a high loan increase or reduce your chances of getting a loan?
+
+•	Model robustness. Random Forest that is less sensitive to outliers because it treats all values that are on the same side equally. Ellis (2023). XGBoost that builds trees and corrects errors from them (Wang (2024). This minimizes the influence of the outliers. 
+
+### 4	ENCODING
+
+Encoding is a key step in data preprocessing especially when preparing categorical variables. Most machine learning algorithms cannot work directly on categorical data as they rely on mathematical operations that require numerical values. Some of the variables in my datasets such as Loan_Status, Gender, Marital status (Married), employment status (Self_employed) and education status(education) needed binary encoding(0,1). On the other hand, Property_ Area was transformed through One-Hot encoding that allowed capturing distinct effects of each property without imposing an ordinal relationship and the original column was removed to avoid redundancy.
+ 
+ 
+After encoding, it is essential to verify that the process was a success by inspecting the first few columns of both datasets as shown below. 
+
+```{r}
+
+### ENCODING ####
+
+DataTrain$Loan_Status <- ifelse(DataTrain$Loan_Status == "Y", 1, 0)
+DataTrain$Gender <- ifelse(DataTrain$Gender == "Male", 1, 0)
+DataTrain$Married <- ifelse(DataTrain$Married == "Yes", 1, 0)
+DataTrain$Self_Employed <- ifelse(DataTrain$Self_Employed == "Yes", 1, 0)
+DataTrain$Education <- ifelse(DataTrain$Education == "Graduate", 1, 0)
+
+DataTrain <- cbind(DataTrain, model.matrix(~ Property_Area - 1, data = DataTrain))
+DataTrain <- DataTrain[, !(colnames(DataTrain) %in% c("Property_Area"))]
+
+
+# Remove the original Property_Area column
+
+DataTest$Gender <- ifelse(DataTest$Gender == "Male", 1, 0)
+DataTest$Married <- ifelse(DataTest$Married == "Yes", 1, 0)
+DataTest$Self_Employed <- ifelse(DataTest$Self_Employed == "Yes", 1, 0)
+DataTest$Education <- ifelse(DataTest$Education == "Graduate", 1, 0)
+DataTest <- cbind(DataTest, model.matrix(~ Property_Area - 1, data = DataTest))
+DataTest <- DataTest[, !(colnames(DataTest) %in% c("Property_Area"))]
+```
+
+```{r include=TRUE, echo=FALSE}
+
+# Display the first 10 columns of DataTrain
+print(head(DataTrain[, 1:5]))
+
+# Display the first 10 columns of DataTest
+print(head(DataTest[, 1:5]))
+```
+
+### More EDA after encoding. 
+
+#### Correlation heatmap.
+
+ It provides a visual representation of the correlation coefficients between pairs of variables within a dataset. Relationships and dependencies can be easily examined which is crucial for data analysis and making predictions.
+ 
+Some of the key observations include:
+
+1.	Positive correlations between 
+-	Credit history and loan status of 0.54 indicating that individuals with good credit history have high chances of getting loan approval.
+
+```{r}
+# convert specified columns to numeric and check numeric status
+convert_to_numeric <- function(data, columns) {
+  for (col in columns) {
+    data[[col]] <- as.numeric(as.character(data[[col]]))
+  }
+  return(data)
+}
+
+# Specify columns to convert
+columns_to_convert <- c("Dependents", "Credit_History")
+
+# Convert columns in both DataTrain and DataTest
+DataTrain <- convert_to_numeric(DataTrain, columns_to_convert)
+DataTest <- convert_to_numeric(DataTest, columns_to_convert)
+
+# Check if each column is numeric for both datasets
+numeric_columns_train <- sapply(DataTrain, is.numeric)
+numeric_columns_test <- sapply(DataTest, is.numeric)
+
+# Print numeric status
+cat("Numeric columns in DataTrain:\n")
+print(numeric_columns_train)
+
+cat("\nNumeric columns in DataTest:\n")
+print(numeric_columns_test)
+
+# Subset DataTrain to include only numeric columns
+numeric_data <- DataTrain[, numeric_columns_train]
+
+# Check the structure of the numeric data
+cat("\nStructure of Numeric Data:\n")
+str(numeric_data)
+```
+
+```{r include=TRUE, echo=FALSE}
+
+# Calculate the correlation matrix
+cor_matrix <- cor(numeric_data, use = "complete.obs")
+
+# Assuming cor_matrix is already defined
+# Create a more visually appealing correlation plot
+corrplot(cor_matrix, 
+         method = "color",               
+         type = "upper",                 
+         tl.col = "black",               
+         tl.srt = 45,                    
+         addCoef.col = "black",          
+         number.cex = 0.7,               
+         col = colorRampPalette(c("red", "white", "blue"))(200),
+         diag = FALSE,                   
+         title = "Correlation Matrix",    
+         mar = c(0, 0, 1, 0)            
+)
+```
+
+-	Applicant Income and Loan Amount of 0.54 suggesting that applicants with higher income tend to request higher loan amounts due to their capacity to pay the loans. 
+
+2.	Negative correlation among all property areas as they are all mutually exclusive.
+
+3.	Weak Correlations between
+
+-	Applicant income and co-applicant income of 0.19 suggesting that there is a relationship but not significant enough.
+
+-	Loan_Amount_Term and Applicant Income of 0.01 which is completely negligible. This indicates that the loan duration is not at all influenced by the applicant’s income.
+
+#### Loan Amount vs Loan Status 
+
+To understand how loan amounts and loan status relate, I made a histogram that will help understand how loan amounts vary between approved and rejected loans. 
+
+The histogram visualizes the loan status with approved vs rejected loans. The loans are dominantly between 100 and 250. There are barely any loans beyond 400. The teal bars show approved loans and are concentrated between 100 and 250. The proportion of approved loans decreases with the increase in loan amounts, and this may be an indicator of a stricter approval criteria for higher loan amounts. The red bars represent unapproved loans, and they are present overall. The most frequent loans are between 150 and 200 and there are more approved than rejected.
+
+```{r include=TRUE, echo=FALSE}
+
+# Histogram for LoanAmount by Loan_Status
+ggplot(DataTrain, aes(x = LoanAmount, fill = factor(Loan_Status))) + 
+  geom_histogram(position = "dodge", bins = 30) + 
+  labs(title = "Distribution of Loan Amounts by Loan Status",
+       x = "Loan Amount", 
+       y = "Count") + 
+  theme_minimal()
+```
+
+#### Loan Amount vs Applicant Income by loan status.  
+
+The bar chart shows a significant majority of data points at lower ranges of Applicant Income which is below 20,000 and loan amount of 250(000). Most approved loans are within the lower ranges whether approved or rejected. Rejected loans (red) are more dispersed and more common for higher loan amounts. Larger loans have higher rejection rates even for more moderate to high incomes. 
+
+
+```{r include=TRUE, echo=FALSE}
+
+# Bar chart for Gender by Loan_Status
+ggplot(DataTrain, aes(x = factor(Gender), fill = factor(Loan_Status))) + 
+  geom_bar(position = "fill") + 
+  labs(x = "Gender", y = "Proportion", fill = "Loan Status") + 
+  theme_minimal()
+
+ggplot(DataTrain, aes(x = ApplicantIncome, y = LoanAmount, color = factor(Loan_Status))) + 
+  geom_point(alpha = 0.6) + 
+  labs(title = "Relationship Between Applicant Income and Loan Amount by Loan Status",
+       x = "Applicant Income", 
+       y = "Loan Amount", 
+       color = "Loan Status") + 
+  theme_minimal()
+```
+
+### EDA and Data Preprocessing Conclusion
+
+The EDA and preprocessing provided valuable insights and prepared the data for modelling. They have provided a clean and structured dataset laying a good foundation of doing the predictions using models. The next involves leveraging learning algorithms to predict loan status effectively based on the insights generated from this phase. 
+
+# MODELS
+
+In this study, machine learning models were implemented to predict the loan approval outcomes. The key factors influencing loan approval (Loan Status) are predicted as well. The models employed for this were Random Forest and XGBoost. 
+
+Random Forest builds multiple decision trees and aggregates their prediction to improve the accuracy of the outcomes. It is suitable for datasets with complex relationships, and it is also robust to outliers. 
+XGBoost is a high-performance gradient boosting algorithm that is known for its scalability and speed. It employs advanced regularization techniques to ensure optimum performance. 
+
+Both models handle non-linear relationships well and offer insights that aid in a comprehensive understanding of loan approval factors. 
+
+Before training the models, the data was pre-processed extensively to ensure its suitability for the analysis.
+Steps taken in using models for Prediction.
+
+#### 1.	Loading the libraries
+
+This loads the necessary libraries for the analysis. They are essential for training models, visualizing graphs, and streamlining the workflow. 
+
+#### 2.	Confirm all columns are numeric.
+
+Since Random Forest and XGBoost use mathematical operations, all data must be in numeric for it to be interpretable. 
+
+
+```{r}
+# Load libraries
+library(randomForest)
+library(xgboost)
+library(caret)
+library(Metrics)
+library(ggplot2)
+```
+
+
+```{r include=TRUE, echo=FALSE}
+# 1. Check if all columns in DataTrain are numerical
+are_all_numerical_train <- sapply(DataTrain, is.numeric)
+print(are_all_numerical_train)
+
+
+# 2. Check if all columns in DataTest are numerical
+are_all_numerical_test <- sapply(DataTest, is.numeric)
+print(are_all_numerical_test)
+
+```
+
+#### 3.	Column name consistency 
+
+The training and testing datasets need to have a consistency in their column names for the models to make predictions accurately. 
+
+
+```{r}
+
+# 3. Check column names for consistency
+cat("Column names in DataTrain:", colnames(DataTrain), "\n")
+cat("Column names in DataTest:", colnames(DataTest), "\n")
+```
+
+#### 4.	Defining Features and Target. 
+
+This section defines the target variable (Loan_Status) and it selects the feature columns for training and testing. ‘Setdiff(names (DataTrain), exclude_cols) identifies all the columns in DataTrain except for the target variable. 
+
+X_train contains the feature columns while y-train contains the target variable that is converted to a factor because of classification.
+
+X_test is prepared the same way. 
+
+```{r}
+
+# 4. Define Features and Target
+target_col <- "Loan_Status"  # Target variable in DataTrain
+exclude_cols <- c("X", target_col)  # Columns to exclude (identifier and target)
+
+# Select feature columns for training
+FeatureColumns <- setdiff(names(DataTrain), exclude_cols)  # All columns except target and identifier
+
+# Prepare training data
+X_train <- DataTrain[, FeatureColumns, drop = FALSE]  # Features in DataTrain
+y_train <- as.factor(DataTrain[[target_col]])  # Target in DataTrain (converted to factor for classification)
+
+# Prepare testing data (features only, no target variable)
+X_test <- DataTest[, FeatureColumns, drop = FALSE]
+
+# -------- NEW CODE: Handle Non-Numeric Columns --------
+# Identify non-numeric columns in X_train
+non_numeric_cols <- sapply(X_train, function(col) !is.numeric(col))
+cat("Non-numeric columns in X_train:", names(X_train)[non_numeric_cols], "\n")
+
+# Convert non-numeric columns to numeric using one-hot encoding
+if (any(non_numeric_cols)) {
+  dummy_model <- dummyVars("~ .", data = X_train)
+  X_train <- as.data.frame(predict(dummy_model, newdata = X_train))
+  X_test <- as.data.frame(predict(dummy_model, newdata = X_test))  # Apply the same transformation to X_test
+}
+
+# Confirm that all columns in X_train are numeric
+if (all(sapply(X_train, is.numeric))) {
+  cat("All columns in X_train are now numeric.\n")
+} else {
+  stop("Some columns in X_train are still not numeric. Please debug.")
+}
+
+# Confirm the structure of training and testing sets
+cat("Dimensions of X_train:", dim(X_train), "\n")
+cat("Dimensions of X_test:", dim(X_test), "\n")
+```
+
+#### 5.	Handling non-numeric columns. 
+
+The purpose is to ensure all columns in the training dataset are numeric. If any non-numeric are found, one-hot coding is applied using ‘dummyVars’ converting any variable, incase there is any. 
+ 
+
+### 4.1	Random Forest
+
+#### A. Training Random Forest Model
+
+To predict loan approval (Loan_Status), the Random Forest was trained using the pre-processed data. X_train features were used, and y_train was states as the target. The ntree = 100 means that 100 decision trees were built to form the forest to ensure robust predictions. Reproducibility of results was set using the random seed set. seed (42). The model is then used to make predictions on the test dataset (‘X_test’). The code used establishes the groundwork for predicting loan status using Random Forest. 
+
+#### B. Random Forest predictions 
+
+To understand the predictions made by Random Forest, the predictions are summarized in Figure 38. According to the table, 65 loans were predicted to NOT be approved, and 302 loans were approved. 
+This distribution provides insight into how the model is performing. There is a tendency to predict loan approvals than rejection. 
+
+```{r}
+# 5. Training Random Forest Model
+cat("Training Random Forest Model...\n")
+rf_model <- randomForest(x = X_train, y = y_train, ntree = 100, importance = TRUE, set.seed(42))
+```
+
+```{r include=TRUE, echo=FALSE}
+
+# Predicting with Random Forest
+rf_predictions <- predict(rf_model, X_test)
+```
+
+```{r include=TRUE, echo=FALSE}
+# Summary Statistics of Predictions
+cat("Summary Statistics of Random Forest Predictions:\n")
+prediction_summary <- table(rf_predictions)  # Generate a table of class counts
+print(prediction_summary)
+
+```
+```{r include=TRUE, echo=FALSE}
+# Visualization: Bar Chart of Prediction Distribution
+
+ggplot(data.frame(Predictions = rf_predictions), aes(x = Predictions)) +
+  geom_bar(fill = "blue", alpha = 0.7) +
+  labs(
+    title = "Random Forest Predictions Distribution",
+    x = "Predicted Loan Status",
+    y = "Count"
+  ) +
+  theme_minimal()
+```
+
+#### Random Forest Feature importance 
+
+This section displays the importance of each feature used in the Random Forest model. Through this, variables with most influence on the models’ predictions are identified. Random Forest assesses the feature importance through 2 primary metrics. 
+
+•	Mean Decrease Accuracy (MDA). It measures the decrease in model accuracy when a feature is randomly shuffled. A larger MDA means the feature plays a bigger role.
+
+•	Mean Decrease Gini (MDG). It involves calculating weighted impunity decrease for each feature across all Trees. Higher MDA suggests essential feature. 
+
+```{r include=TRUE, echo=FALSE}
+# Feature Importance from Random Forest
+cat("\nRandom Forest Feature Importance:\n")
+print(importance(rf_model))
+```
+
+According to the figure,  the top 3 influences are Credit_History, ApplicantIncome and Loan_Amount. 
+
+Credit History emerges as the MOST critical feature influencing loan approval as the MDA is 33.68 and the MDG is 65.55. This means that applicants with a credit history have a higher chance of receiving loan approvals. 
+
+ApplicantIncome is the second MOST important feature with an MDA of 7.84 and MDG of 40.98. The more income an applicant has, the higher the chances of securing an approval. 
+
+Loan Amount also impact the loan approval decisions with higher loans lowering the approval rate unless it is offset by other factors like a good credit history and a high income. 
+
+Gender, Property_AreaRural, Property_AreaUrban and Self_Employed features are the least impactful features. 
+The Random Forest feature importance analysis provides invaluable insights into the key determinants of loan approval. When Dream house financing company focuses on Credit_History, ApplicantIncome and LoanAmount, they can refine their lending strategies in ways that reduce credit risk. 
+
+
+```{r include=TRUE, echo=FALSE}
+
+# Visualization: Mean Decrease Accuracy
+importance_df_mda <- data.frame(
+  Feature = rownames(importance(rf_model)),
+  MeanDecreaseAccuracy = importance(rf_model)[, "MeanDecreaseAccuracy"]
+)
+
+plot_mda <- ggplot(importance_df_mda, aes(x = reorder(Feature, MeanDecreaseAccuracy), y = MeanDecreaseAccuracy)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  coord_flip() +
+  labs(
+    title = "RF-MDA",
+    x = "Features",
+    y = "Mean Decrease Accuracy"
+  ) +
+  theme_minimal()
+
+# Visualization: Mean Decrease Gini
+importance_df_mdGini <- data.frame(
+  Feature = rownames(importance(rf_model)),
+  MeanDecreaseGini = importance(rf_model)[, "MeanDecreaseGini"]
+)
+
+plot_mdGini <- ggplot(importance_df_mdGini, aes(x = reorder(Feature, MeanDecreaseGini), y = MeanDecreaseGini)) +
+  geom_bar(stat = "identity", fill = "salmon") +
+  coord_flip() +
+  labs(
+    title = "RF- MDG",
+    x = "Features",
+    y = "Mean Decrease Gini"
+  ) +
+  theme_minimal()
+
+# Arrange the plots side by side
+grid.arrange(plot_mda, plot_mdGini, ncol = 2)
+```
+
+### 4.2	XGBOOST
+
+#### a.	XG Boost Training 
+This part prepares the data for the XGBoost model by ensuring the target variable has been converted to numeric and adjusts it to be 0-based as needed by the model. I used the ‘`xgb.DMatrix(...)’ to create the Dmatrix objects for both training and testing datasets to improve performance and memory efficiency. I also defined the parameters of the model to show its multiclass and controlled the complexity of the model. 
+
+Preparing XGBoost involved  focusing on preparing the data by converting y_train to a numeric factor to ensure its zero-based. All feature matrices are also converted into a format optimized for XGBoost. The section also trains the XG Boost using specific parameters and training data. 
+
+#### b.	XGBoost Predictions
+
+After training, the model’s capability was applied to test the dataset to forecast the loan approval outcomes. The model showed that 83 applicants were predicted as “0” (loan rejected) and 284 participants were predicted as “1” (loan approved). 
+
+```{r}
+# -------- Prepare Data for XGBoost --------
+# Convert y_train to numeric for XGBoost
+y_train_numeric <- as.numeric(y_train) - 1  # XGBoost requires 0-based labels
+
+# Create DMatrix for training and testing
+train_matrix <- xgb.DMatrix(data = as.matrix(X_train), label = y_train_numeric)
+test_matrix <- xgb.DMatrix(data = as.matrix(X_test))
+
+# Set XGBoost parameters for classification
+params <- list(
+  objective = "multi:softmax",  # Multi-class classification
+  num_class = length(levels(y_train)),  # Number of classes
+  eta = 0.1,
+  max_depth = 6
+)
+
+cat("\nTraining XGBoost Model...\n")
+# Train the XGBoost Model
+xgb_model <- xgb.train(
+  params = params,
+  data = train_matrix,
+  nrounds = 100,
+  verbose = 0
+)
+
+# Predicting with XGBoost
+xgb_predictions <- predict(xgb_model, test_matrix)
+
+# Convert numeric predictions back to factor levels for consistency
+xgb_predictions_factor <- factor(xgb_predictions, levels = 0:(length(levels(y_train)) - 1), labels = levels(y_train))
+```
+```{r include=TRUE, echo=FALSE}
+# -Table and Bar Chart for Predictions --------
+# Summary Table of XGBoost Predictions
+cat("\nSummary of XGBoost Predictions:\n")
+xgb_prediction_summary <- table(xgb_predictions_factor)
+print(xgb_prediction_summary)
+```
+
+```{r include=TRUE, echo=FALSE}
+# Visualization: Bar Chart of XGBoost Prediction Distribution
+ggplot(data.frame(Predictions = xgb_predictions_factor), aes(x = Predictions)) +
+  geom_bar(fill = "green", alpha = 0.7) +
+  labs(
+    title = "XGBoost Predictions Distribution",
+    x = "Predicted Loan Status",
+    y = "Count"
+  ) +
+  theme_minimal()
+
+```
+
+### XGBoost Feature Importance 
+
+The feature importance in XGBoost is based on metrics such as Gain, Cover and frequency that provide insights into the contribution of each feature in model decision-making. 
+
+Credit_History emerges as the most significant predictor of loan status with gain of 30.73%, Cover of 12.70% and frequency of 3.16%. gain shows that the model relies heavily on it for accuracy splits.
+
+ApplicantIncome comes second with gain of 23.68%, cover of 32.27% and frequency of 33.00%. The cover percentage is evidence of how significant his portion is in the dataset. 
+
+The third top feature is LoanAmount with gain of 17.23%, cover of 19.51% and frequency of 24.46%. its combination of gain and frequency emphasizes its importance in model predictions. 
+
+Features like Self-Employed, Property_AreaUrban and Gender have the least impacts on loan status predictions showing that financial institutions prioritize financial and credit factors over employment status, property location and demographic characteristics. 
+
+```{r include=TRUE, echo=FALSE}
+# -------- Feature Importance for XGBoost --------
+cat("\nCalculating Feature Importance for XGBoost...\n")
+xgb_importance <- xgb.importance(model = xgb_model)
+print(xgb_importance)
+```
+
+The figure provides a quick overview of the most to the least influential factors in the loan approval process. By focusing on the high-gain features, lenders can easily refine their evaluation criteria to ensure that their decisions align with the predicted insights.
+
+```{r include=TRUE, echo=FALSE}
+# Visualization: Feature Importance
+ggplot(data = xgb_importance, aes(x = reorder(Feature, Gain), y = Gain)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  coord_flip() +
+  labs(
+    title = "XGBoost Feature Importance by Gain",
+    x = "Features",
+    y = "Importance (Gain)"
+  ) +
+  theme_minimal()
+```
+
+### 4.3	MODEL EVALUATION
+
+This is the process to assess the performance of both models. I used both cross validation and hyperparameter to evaluate the performance of Random Forest and Cross Validation. 
+
+Cross validation is a robust statistical method used to evaluate the performance of machine learning models. It provides reliable performance evaluation; it mitigates the variance that may arise from single train-test and detects overfitting. 
+
+On the other hand, hyperparameter optimizes the model performance, avoids overfitting and underfitting and improves interpretability of the model.
+
+ In this report, we compare the performance of XGBoost and Random Forest using cross validation and hyperparameter tuning in predicting loan status. To achieve this, we need to assess the metrics of the models independently then compare their results.
+ 
+For Random Forest, under the cross validation, 5-fold cross-validation model is used to predict the loan status. The results from this will give insights into the model’s performance and will be used to compare the results with XGBoost. 
+
+The results in figure 46 shows Accuracy which is a proportion of correctly predicted instances and Kappa that provides insight beyond the mere accuracy. 
+
+```{r include=TRUE, echo=FALSE}
+# Cross-validation for Random Forest
+rf_cv <- train(
+  x = X_train, y = y_train,
+  method = "rf",
+  trControl = trainControl(method = "cv", number = 5)
+)
+rf_cv_results <- rf_cv$results
+print(rf_cv_results)
+
+# Cross-validation for XGBoost
+xgb_cv <- train(
+  x = X_train, y = y_train,
+  method = "xgbTree",
+  trControl = trainControl(method = "cv", number = 5),
+  tuneGrid = expand.grid(
+    nrounds = c(50, 100),
+    max_depth = c(6, 8),
+    eta = c(0.1, 0.3),
+    gamma = 0,
+    colsample_bytree = 0.8,
+    min_child_weight = 1,
+    subsample = 0.8
+  )
+)
+xgb_cv_results <- xgb_cv$results
+print(xgb_cv_results)
+```
+
+Cross-validation in conjunction with Hyperparameter tuning is also done in XG Boost to analyse its performance in predicting loan status. Hyperparameter tuning by boosting the number of rounds, the learning rate and maximizing the tree depth optimize the model’s performance. The results obtained as shown in figure 47 provides insights on how well the model performs in comparison to Random Forest. 
+
+
+### 4.4	Validation Results Explanation
+
+The cross-validation results provide perfect profiling of Random Forest and XGBoost models based on their performance on different folds. Despite both models performing very well, it is evident that Random Forest performs better overall. 
+
+Based on the cross- validation results, the accuracy, kappa, Accuracy SD 6 and Kappa SD of both models are shown, and they help analyse which model is better for predicting loan status.
+```{r include=TRUE, echo=FALSE}
+# Create a data frame for the table
+model_comparison <- data.frame(
+  Metric = c("Accuracy", "Kappa", "Accuracy SD", "Kappa SD"),
+  `Random Forest` = c("80.62%", "0.476", "±2.11%", "±5.61%"),
+  XGBoost = c("78.83%", "0.454", "±2.19%", "±4.66%")
+)
+
+# Display the table using knitr::kable
+knitr::kable(
+  model_comparison,
+  caption = "Model Performance Comparison: Random Forest vs. XGBoost",
+  col.names = c("Metric", "Random Forest", "XGBoost"),
+  align = "lcc" # Align: left for Metric, center for others
+)
+```
+
+The results indicate that Random Forest show a stable and high accuracy and shows a good agreement between the actual and predicted loan status measured by Kappa. The standard deviation across also supports the reliability of the model. 
+
+On the other hand, XGBoost also performed well despite having a lower accuracy than RF. It is also less consistent compared to RF making RF more dependable.
+
+Random Forest outperforms XG Boost due to the following factors:
+
+•	Higher accuracy making it a reliable choice in predicting loan status. 
+
+•	Better stability due to the lower standard deviation evidenced by Kappa. 
+
+•	Ease of interpretation as its metrics (Mean Decrease Accuracy) and Mean Decrease Gini (MDG) both rank the most key features in loan status. 
+
+### 4.5	BUSINESS INSIGHTS 
+
+The results prove that Random Forest is the preferred model for predicting loan status. Key takeaways from the analysis include:
+
+Credit History is the key determinant of loan approval. Banks and lenders need to thoroughly check the credit history of the loan borrowers as it is an indicator their financial behaviour with loans. Lenders should also evaluate the credit scores of loan applicants during the loan approval process to assess how much risk is associated with every loan approval or each client. 
+
+Applicant and CoApplicant Income significance. The primary source of income of the loan applicant will directly impact their likelihood of getting a loan approval. It assures that the lender that the applicant has a source of income and can meet their debt obligations. Coa-applicant Income  enhances overall financial stability when the co-applicant (in most cases partner) has an income as well. It demonstrates a stronger financial base within the household. 
+
+Evaluating Loan Amount . This is the amount of money requested. This should align with the applicant’s financial capacity. Bigger loans mean bigger risks for the lenders hence higher scrutiny strategy to ensure they are lending to a dependable person. The lenders should also learn to educate their customers about borrowing within their capacity as it will reduce default rates in banks and the applicants can improve their finances to help them access bigger loans. 
+
+Decision making based on the model results. Random Forest ranked the key features. This should be used by lenders to influence their decision-making process. This will reduce potential bias that may be present when using traditional manual evaluations. 
+
+
+### 4.6	Limitations 
+
+Retaining the outliers in our datasets as they represented high loan amounts and high incomes. Despite this decision being intentional, there were chances that it impacted the model stability despite using models that collaborate well with outliers. 
+
+The data was also limited to only one financial institution and this may not be a representation of the wider market. The dataset was small which means that it could lead to biased outcome.
+
+Limitation of features in our datasets. Features such asset value of the applicant, employment details(part-time, full-time, or contractual), debt-to-income ratio which would provide their capacity to manage debt and collateral value. This would have provided a better detailed prediction.
+
+### 4.7	Future Work
+
+Expansion of data to include a wider range of loan applicants. This would help reduce any bias in our work and create models that will better reflect real-world situations.
+
+Feature engineering to improve on the model performance. For example, if there was available macroeconomic data and interest rates of the loans, they would improve the model’s ability to predict loan approvals. 
+
+Real-time prediction integration to enable faster decision-making and improving the costumer’s experience. 
+
+### 4.8	Conclusion 
+
+Predictive models, Random Forest and XGBoost were developed to determine loan approval using the given test dataset. 
+
+Random Forest became the best- performing model revealing Credit History as the most significant feature in loan approval. These reveals the importance of good financial discipline and with features like loan amount and applicants’ income being significant, they also show the importance of financial stability. 
+
+These findings will provide a roadmap for lenders, especially Dream House Financing Company to streamline  the loan approval processes. While the study has its limitations, it gives insight and motivation for future research to refine models that can approve loans in real time. 
+
+
+#### 5	REFERENCES 
+
+1.	Kavaarpuo, G., Mintah, K. and Donkor-Hyiaman, K.A. (2023) 'Financing housing development in an underdeveloped financial market: Learning from developers’ financing adaptations,' Housing Policy Debate, pp. 1–28. Available at: https://doi.org/10.1080/10511482.2023.2237004.
+
+2.	Allied Market Research (2022) 'Financial services - analyzes credit and investment business functions,' Allied Market Research. Available at:
+https://www.alliedmarketresearch.com/banking-financial-services-and-insurance/financial-services-market-report.
+
+3.	Doling, J. et al. (2013) 'Housing and housing finance: A review of the links to economic development and poverty reduction,' ADB Economics Working Paper Series. Asian Development Bank. Available at: https://www.adb.org/sites/default/files/publication/30348/ewp-362.pdf.
+
+4.	Yamparala, R. et al. (2022) 'Predicting loans using machine learning,' in Advances in Intelligent Systems and Computing, pp. 701–712. Available at: https://doi.org/10.1007/978-981-19-3590-9_55.
+
+5.	Fusefinance.com (2023) '13 benefits of loan automation for financial institutions,' Fuse Finance. Available at: https://www.fusefinance.com/blog/benefits-of-loan-automation.
+
+6.	Wingard, L. (2024) 'Top 10 banking industry challenges — and how you can overcome them,' Hitachi Solutions. Available at: https://global.hitachi-solutions.com/blog/top-10-challenges-banking-financial-organizations-can-overcome/.
+
+7.	Najafbagy, R. (2010) 'Banking automation in Iran: Its social and banking effects,' Journal of Performance Management.
+
+8.	MonJa (2023) '4 challenges of manual consumer lending and how automation solves them,' MonJa. Available at: https://monjaco.com/blog/4-challenges-of-manual-consumer-lending-and-how-automation-solves-them/#:~:text=4%20Challenges%20of%20Manual%20Consumer%20Lending%201%201.,4.%20Wasted%20time%2C%20analyzing%20fairly%20simple%20cases%20.
+9.	Emmanuel, T. et al. (2021) 'A survey on missing data in machine learning,' Journal of Big Data, 8(1). Available at: https://doi.org/10.1186/s40537-021-00516-9.
+
+10.	Aguinis, H., Gottfredson, R.K. and Joo, H. (2013) 'Best-practice recommendations for defining, identifying, and handling outliers,' Organizational Research Methods, 16(2), pp. 270–301. Available at: https://doi.org/10.1177/1094428112470848.
+
+11.	World Bank Group (2023) 'Housing finance,' World Bank. Available at: https://www.worldbank.org/en/topic/financialsector/brief/housing-finance.
+
+12.	Wang, J. (2024) 'XGBoost: What, and how, and why?,' Medium, 16 November. Available at: https://jimmy-wang-gen-ai.medium.com/xgboost-what-and-how-and-why-e466b36e237c.
+
+13.	MonJa (2023) '4 challenges of manual consumer lending and how automation solves them,' MonJa. Available at: https://monjaco.com/blog/4-challenges-of-manual-consumer-lending-and-how-automation-solves-them/.
+
+14.	Baig, M., Sohoni, S. and Lhuer, X. (2024) 'Shifting to cloud-based platforms for banking efficiency,' ResearchGate. Available at: https://www.researchgate.net/publication/362820053_Shifting_to_Cloud-Based_Platforms_for_Banking_Efficiency.
+
+15.	Gogula, K. and Chattu, N. (2024) 'Loan eligibility prediction using machine learning,' International Journal of Soft Computing and Engineering, 14(4), pp. 12–15. Available at: https://doi.org/10.35940/ijsce.c8144.14040924.
+
+16.	Ellis, C. (2023) 'When to use random forests,' Crunching the Data. Available at: https://crunchingthedata.com/when-to-use-random-forests/.
+
+
+
+
