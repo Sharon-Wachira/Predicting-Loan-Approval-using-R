@@ -1,5 +1,5 @@
 ---
-title: "SHARON_24072373"
+title: "LOAN APPROVAL PREDICTION USING R"
 author: "SHARON WACHIRA"
 date: "2024-12-16"
 output: html_document
