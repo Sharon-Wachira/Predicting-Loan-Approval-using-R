@@ -29,7 +29,10 @@ Feature Engineering: The categorical value '3+' in the Dependents column was con
 
 ###### Exploratory Data Analysis (EDA)
 
-A Correlation Heatmap revealed a significant positive correlation of 0.54 between Credit_History and Loan_Status, suggesting it is the strongest predictor. 
+A Correlation Heatmap revealed a significant positive correlation of 0.54 between Credit_History and Loan_Status, suggesting it is the strongest predictor.
+
+<img width="849" height="721" alt="image" src="https://github.com/user-attachments/assets/077308e3-b459-4d5f-9cb1-9a30a552abb9" />
+
 
 ###### Model Training and Evaluation
 Both Random Forest and XGBoost models were trained and evaluated using a 5-fold cross-validation approach with hyperparameter tuning to ensure robust performance and mitigate overfitting. 
